@@ -20,7 +20,6 @@
 # repository. Once it merges there, the changes will automatically be proposed to
 # all the repositories which use it.
 
-
 - name: Setup RPC MQ Service (RabbitMQ)
   delegate_to: "{{ _oslomsg_rpc_setup_host }}"
   when:
