@@ -29,7 +29,7 @@ murano_package_state: latest
 # Set this to True during initial setup, if you want to skip
 # import of the Core Murano Library.
 # This var is stored in local ansible facts.d and set to True
-# after the first successfull run.
+# after the first successful run.
 murano_library_installed: False
 
 # ID or name of the external network for routers to connect to
