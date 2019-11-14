@@ -44,7 +44,7 @@ murano_role_project_group: murano_all
 # Source package builds
 murano_git_repo: https://opendev.org/openstack/murano
 murano_git_install_branch: master
-murano_upper_constraints_url: "{{ requirements_git_url | default('https://opendev.org/openstack/requirements/raw/' ~ requirements_git_install_branch | default('master') ~ '/upper-constraints.txt') }}"
+murano_upper_constraints_url: "{{ requirements_git_url | default('https://releases.openstack.org/constraints/upper/' ~ requirements_git_install_branch | default('master')) }}"
 murano_git_constraints:
   - "git+{{ murano_git_repo }}@{{ murano_git_install_branch }}#egg=murano"
   - "--constraint {{ murano_upper_constraints_url }}"
