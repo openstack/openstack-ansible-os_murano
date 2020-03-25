@@ -17,7 +17,7 @@ auth_url = {{ keystone_service_adminurl }}
 identity_uri = {{ keystone_service_adminuri }}
 insecure = {{ keystone_service_publicuri_insecure | bool }}
 
-memcached_servers = {{ memcached_servers }}
+memcached_servers = {{ murano_memcached_servers }}
 # if your memcached server is shared, use these settings to avoid cache poisoning
 memcache_security_strategy = ENCRYPT
 memcache_secret_key = {{ memcached_encryption_key }}

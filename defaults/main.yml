@@ -52,6 +52,7 @@ murano_pip_packages:
   - murano
   - PyMySQL
   - python-memcached
+  - pymemcache
   - systemd-python
 murano_optional_oslomsg_amqp1_pip_packages:
   - oslo.messaging[amqp1]
@@ -59,6 +60,8 @@ murano_venv_tag: "{{ venv_tag | default('untagged') }}"
 murano_bin: "{{ _murano_bin }}"
 
 murano_pip_install_args: "{{ pip_install_options | default('') }}"
+
+murano_memcached_servers: "{{ memcached_servers }}"
 
 # Services
 murano_services:
