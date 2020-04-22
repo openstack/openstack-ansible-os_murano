@@ -17,9 +17,3 @@ Default variables
 Dependencies
 ~~~~~~~~~~~~
 
-
-Example playbook
-~~~~~~~~~~~~~~~~
-
-.. literalinclude:: ../../examples/playbook.yml
-   :language: yaml
