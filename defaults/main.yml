@@ -35,12 +35,6 @@ murano_library_installed: False
 # ID or name of the external network for routers to connect to
 murano_public_net_name: "public"
 
-# This variable is used by the repo_build process to determine
-# which host group to check for members of before building the
-# pip packages required by this role. The value is picked up
-# by the py_pkgs lookup.
-murano_role_project_group: murano_all
-
 # Source package builds
 murano_git_repo: https://opendev.org/openstack/murano
 murano_git_install_branch: master
