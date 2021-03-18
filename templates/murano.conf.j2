@@ -5,6 +5,8 @@ debug = {{ murano_debug }}
 use_journal = true
 transport_url = {{ murano_oslomsg_rpc_transport }}://{% for host in murano_oslomsg_rpc_servers.split(',') %}{{ murano_oslomsg_rpc_userid }}:{{ murano_oslomsg_rpc_password }}@{{ host }}:{{ murano_oslomsg_rpc_port }}{% if not loop.last %},{% else %}/{{ murano_oslomsg_rpc_vhost }}{% if murano_oslomsg_rpc_use_ssl | bool %}?ssl=1{% else %}?ssl=0{% endif %}{% endif %}{% endfor %}
 
+home_region = {{ murano_service_region }}
+
 [database]
 connection = mysql+pymysql://{{ murano_galera_user }}:{{ murano_galera_password }}@{{ murano_galera_address }}/{{ murano_galera_database }}?charset=utf8
 
@@ -16,6 +18,7 @@ auth_type = password
 auth_url = {{ keystone_service_adminurl }}
 identity_uri = {{ keystone_service_adminuri }}
 insecure = {{ keystone_service_publicuri_insecure | bool }}
+interface = internal
 
 memcached_servers = {{ murano_memcached_servers }}
 # if your memcached server is shared, use these settings to avoid cache poisoning
@@ -33,7 +36,7 @@ username = {{ murano_service_user_name }}
 www_authenticate_uri = {{ keystone_service_publicuri }}
 
 [murano]
-endpoint_type = internalURL
+endpoint_type = internal
 
 [murano_auth]
 www_authenticate_uri = {{ keystone_service_adminuri }}
@@ -60,3 +63,6 @@ endpoint_type = internalURL
 
 [heat]
 endpoint_type = internalURL
+
+[keystone]
+auth_url = {{ keystone_service_internalurl }}
