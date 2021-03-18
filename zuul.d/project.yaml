@@ -14,8 +14,14 @@
 # limitations under the License.
 
 - project:
-    # NOTE(ianw) 2021-08-10 The non-voting debian-stable jobs have
-    # been removed as we no longer support Debian Stretch
+    check:
+      jobs:
+        - openstack-ansible-upgrade-aio_metal-ubuntu-focal:
+            voting: false
+    gate:
+      jobs:
+        - openstack-ansible-upgrade-aio_metal-ubuntu-focal:
+            voting: false
     templates:
       - check-requirements
       - openstack-ansible-deploy-aio_metal-jobs

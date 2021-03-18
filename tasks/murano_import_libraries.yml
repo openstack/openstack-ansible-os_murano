@@ -44,6 +44,10 @@
     OS_USER_DOMAIN_ID: "{{ murano_service_user_domain_id }}"
     OS_PROJECT_DOMAIN_ID: "{{ murano_service_project_domain_id }}"
     OS_REGION_NAME: "{{ murano_service_region }}"
+  register: import_libraries
+  until: import_libraries is success
+  retries: 10
+  delay: 5
   with_items:
     - io.murano
     - io.murano.applications

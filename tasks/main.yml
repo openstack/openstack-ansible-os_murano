@@ -42,10 +42,12 @@
 
 - import_tasks: db_setup.yml
   when:
-    - "murano_services['murano-api']['group'] in group_names"
-    - "inventory_hostname == ((groups[murano_services['murano-api']['group']]| intersect(ansible_play_hosts)) | list)[0]"
+    - _murano_is_first_play_host
   vars:
     _oslodb_setup_host: "{{ murano_db_setup_host }}"
+    _oslodb_ansible_python_interpreter: "{{ murano_db_setup_python_interpreter }}"
+    _oslodb_setup_endpoint: "{{ murano_galera_address }}"
+    _oslodb_setup_port: "{{ murano_galera_port }}"
     _oslodb_databases:
       - name: "{{ murano_galera_database }}"
         users:
@@ -57,8 +59,7 @@
 
 - import_tasks: mq_setup.yml
   when:
-    - "murano_services['murano-api']['group'] in group_names"
-    - "inventory_hostname == ((groups[murano_services['murano-api']['group']]| intersect(ansible_play_hosts)) | list)[0]"
+    - _murano_is_first_play_host
   vars:
     _oslomsg_rpc_setup_host: "{{ murano_oslomsg_rpc_setup_host }}"
     _oslomsg_rpc_userid: "{{ murano_oslomsg_rpc_userid }}"
@@ -84,8 +85,7 @@
 
 - import_tasks: murano_db_sync.yml
   when:
-    - "murano_services['murano-api']['group'] in group_names"
-    - "inventory_hostname == ((groups[murano_services['murano-api']['group']]| intersect(ansible_play_hosts)) | list)[0]"
+    - _murano_is_first_play_host
   tags:
     - murano-config
 
@@ -159,8 +159,7 @@
         type: "{{ murano_service_type }}"
         description: "{{ murano_service_description }}"
   when:
-    - "murano_services['murano-api']['group'] in group_names"
-    - "inventory_hostname == ((groups[murano_services['murano-api']['group']]| intersect(ansible_play_hosts)) | list)[0]"
+    - _murano_is_first_play_host
   tags:
     - murano-config
 
@@ -169,7 +168,7 @@
 
 - import_tasks: murano_import_libraries.yml
   when:
-    - inventory_hostname == groups['murano_api'][0]
+    - _murano_is_first_play_host
     - "not murano_library_installed | bool"
   tags:
     - murano-config

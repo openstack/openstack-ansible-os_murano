@@ -40,10 +40,9 @@ murano_git_repo: https://opendev.org/openstack/murano
 murano_git_install_branch: master
 murano_upper_constraints_url: "{{ requirements_git_url | default('https://releases.openstack.org/constraints/upper/' ~ requirements_git_install_branch | default('master')) }}"
 murano_git_constraints:
-  - "git+{{ murano_git_repo }}@{{ murano_git_install_branch }}#egg=murano"
   - "--constraint {{ murano_upper_constraints_url }}"
 murano_pip_packages:
-  - murano
+  - "git+{{ murano_git_repo }}@{{ murano_git_install_branch }}#egg=murano"
   - PyMySQL
   - python-memcached
   - pymemcache
@@ -108,15 +107,16 @@ murano_oslomsg_notify_vhost: "{{ murano_oslomsg_rpc_vhost }}"
 murano_oslomsg_amqp1_enabled: "{{ murano_oslomsg_rpc_transport == 'amqp' }}"
 
 # Database
-murano_db_setup_host: "{{ ('galera_all' in groups) | ternary(groups['galera_all'][0], 'localhost') }}"
+murano_db_setup_host: "{{ openstack_db_setup_host | default('localhost') }}"
+murano_db_setup_python_interpreter: "{{ openstack_db_setup_python_interpreter | default((murano_db_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_python['executable'])) }}"
 murano_galera_address: "{{ galera_address | default('127.0.0.1') }}"
 murano_galera_database: murano
 murano_galera_user: murano
-
+murano_galera_port: "{{ galera_port | default('3306') }}"
 
 # Configuration options
 murano_debug: "{{ debug | default(false) }}"
-murano_bind_address: 0.0.0.0
+murano_bind_address: "{{ openstack_service_bind_address | default('0.0.0.0') }}"
 murano_service_port: 8082
 
 # Overrides
@@ -132,13 +132,13 @@ murano_service_setup_host_python_interpreter: "{{ openstack_service_setup_host_p
 murano_service_name: murano
 murano_service_type: application-catalog
 murano_service_description: OpenStack Application Catalog service
-murano_service_in_ldap: false
+murano_service_in_ldap: "{{ service_ldap_backend_enabled | default(False) }}"
 murano_service_user_domain_id: default
 murano_service_user_name: murano
 murano_service_project_domain_id: default
 murano_service_project_name: service
 murano_role_name: admin
-murano_service_region: RegionOne
+murano_service_region: "{{ service_region | default('RegionOne') }}"
 murano_service_proto: http
 murano_service_publicuri_proto: "{{ openstack_service_publicuri_proto | default(murano_service_proto) }}"
 murano_service_publicurl: "{{ murano_service_publicuri_proto }}://{{ external_lb_vip_address }}:{{ murano_service_port }}"

@@ -18,6 +18,8 @@
 # the host is in the host group and the service is enabled.
 # The service list is provided in the defined start order.
 
+_murano_is_first_play_host: "{{ (murano_services['murano-api']['group'] in group_names and inventory_hostname == (groups[murano_services['murano-api']['group']] | intersect(ansible_play_hosts)) | first) | bool }}"
+
 filtered_murano_services: |-
   {% set services = [] %}
   {% for key, value in murano_services.items() %}
