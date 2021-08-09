@@ -14,15 +14,8 @@
 # limitations under the License.
 
 - project:
-    # TODO(noonedeadpunk) Set voting once debian will have python3.6+ on board
-    check:
-      jobs:
-        - openstack-ansible-deploy-aio_metal-debian-stable:
-            voting: false
-    gate:
-      jobs:
-        - openstack-ansible-deploy-aio_metal-debian-stable:
-            voting: false
+    # NOTE(ianw) 2021-08-10 The non-voting debian-stable jobs have
+    # been removed as we no longer support Debian Stretch
     templates:
       - check-requirements
       - openstack-ansible-deploy-aio_metal-jobs
