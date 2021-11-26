@@ -78,7 +78,7 @@ murano_services:
 
 # Murano uWSGI settings
 murano_wsgi_processes_max: 16
-murano_wsgi_processes: "{{ [[ansible_processor_vcpus|default(1), 1] | max * 2, murano_wsgi_processes_max] | min }}"
+murano_wsgi_processes: "{{ [[ansible_facts['processor_vcpus']|default(1), 1] | max * 2, murano_wsgi_processes_max] | min }}"
 murano_wsgi_threads: 1
 
 # RPC
@@ -130,7 +130,7 @@ murano_paste_conf_overrides: {}
 
 # Service setup
 murano_service_setup_host: "{{ openstack_service_setup_host | default('localhost') }}"
-murano_service_setup_host_python_interpreter: "{{ openstack_service_setup_host_python_interpreter | default((murano_service_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_python['executable'])) }}"
+murano_service_setup_host_python_interpreter: "{{ openstack_service_setup_host_python_interpreter | default((murano_service_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_facts['python']['executable'])) }}"
 murano_service_name: murano
 murano_service_type: application-catalog
 murano_service_description: OpenStack Application Catalog service
