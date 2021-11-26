@@ -3,7 +3,7 @@
 [DEFAULT]
 debug = {{ murano_debug }}
 use_journal = true
-transport_url = {{ murano_oslomsg_rpc_transport }}://{% for host in murano_oslomsg_rpc_servers.split(',') %}{{ murano_oslomsg_rpc_userid }}:{{ murano_oslomsg_rpc_password }}@{{ host }}:{{ murano_oslomsg_rpc_port }}{% if not loop.last %},{% else %}/{{ murano_oslomsg_rpc_vhost }}{% if murano_oslomsg_rpc_use_ssl | bool %}?ssl=1{% else %}?ssl=0{% endif %}{% endif %}{% endfor %}
+transport_url = {{ murano_oslomsg_rpc_transport }}://{% for host in murano_oslomsg_rpc_servers.split(',') %}{{ murano_oslomsg_rpc_userid }}:{{ murano_oslomsg_rpc_password }}@{{ host }}:{{ murano_oslomsg_rpc_port }}{% if not loop.last %},{% else %}/{{ murano_oslomsg_rpc_vhost }}{% if murano_oslomsg_rpc_use_ssl | bool %}?ssl=1&ssl_version={{ murano_oslomsg_rpc_ssl_version }}&ssl_ca_file={{ murano_oslomsg_rpc_ssl_ca_file }}{% else %}?ssl=0{% endif %}{% endif %}{% endfor %}
 
 home_region = {{ murano_service_region }}
 
@@ -50,7 +50,7 @@ virtual_host = {{ murano_oslomsg_notify_vhost }}
 
 [oslo_messaging_notifications]
 driver = {{ (murano_ceilometer_enabled | bool) | ternary('messagingv2', 'noop') }}
-transport_url = {{ murano_oslomsg_notify_transport }}://{% for host in murano_oslomsg_notify_servers.split(',') %}{{ murano_oslomsg_notify_userid }}:{{ murano_oslomsg_notify_password }}@{{ host }}:{{ murano_oslomsg_notify_port }}{% if not loop.last %},{% else %}/{{ murano_oslomsg_notify_vhost }}{% if murano_oslomsg_notify_use_ssl | bool %}?ssl=1{% else %}?ssl=0{% endif %}{% endif %}{% endfor %}
+transport_url = {{ murano_oslomsg_notify_transport }}://{% for host in murano_oslomsg_notify_servers.split(',') %}{{ murano_oslomsg_notify_userid }}:{{ murano_oslomsg_notify_password }}@{{ host }}:{{ murano_oslomsg_notify_port }}{% if not loop.last %},{% else %}/{{ murano_oslomsg_notify_vhost }}{% if murano_oslomsg_notify_use_ssl | bool %}?ssl=1&ssl_version={{ murano_oslomsg_notify_ssl_version }}&ssl_ca_file={{ murano_oslomsg_notify_ssl_ca_file }}{% else %}?ssl=0{% endif %}{% endif %}{% endfor %}
 
 [networking]
 # In case openstack neutron has no default DNS configured
