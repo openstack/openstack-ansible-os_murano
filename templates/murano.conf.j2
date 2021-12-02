@@ -8,7 +8,11 @@ transport_url = {{ murano_oslomsg_rpc_transport }}://{% for host in murano_oslom
 home_region = {{ murano_service_region }}
 
 [database]
-connection = mysql+pymysql://{{ murano_galera_user }}:{{ murano_galera_password }}@{{ murano_galera_address }}/{{ murano_galera_database }}?charset=utf8{% if murano_galera_use_ssl | bool %}&ssl_verify_cert=true{% if murano_galera_ssl_ca_cert | length > 0 %}&ssl_ca={{ murano_galera_ssl_ca_cert }}{% endif %}{% endif %}
+connection = mysql+pymysql://{{ murano_galera_user }}:{{ murano_galera_password }}@{{ murano_galera_address }}/{{ murano_galera_database }}?charset=utf8{% if murano_galera_use_ssl | bool %}&ssl_verify_cert=true{% if murano_galera_ssl_ca_cert | length > 0 %}&ssl_ca={{ murano_galera_ssl_ca_cert }}{% endif %}{% endif +%}
+max_overflow = {{ murano_db_max_overflow }}
+max_pool_size = {{ murano_db_max_pool_size }}
+pool_timeout = {{ murano_db_pool_timeout }}
+connection_recycle_time = {{ murano_db_connection_recycle_time }}
 
 [keystone_authtoken]
 admin_password = {{ murano_service_password }}
