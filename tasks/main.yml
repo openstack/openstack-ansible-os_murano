@@ -44,7 +44,12 @@
   tags:
     - always
 
-- import_tasks: db_setup.yml
+- include_role:
+    name: openstack.osa.db_setup
+    apply:
+      tags:
+        - common-db
+        - murano-config
   when:
     - _murano_is_first_play_host
   vars:
@@ -58,10 +63,14 @@
           - username: "{{ murano_galera_user }}"
             password: "{{ murano_galera_password }}"
   tags:
-    - common-db
-    - murano-config
+    - always
 
-- import_tasks: mq_setup.yml
+- include_role:
+    name: openstack.osa.mq_setup
+    apply:
+      tags:
+        - common-mq
+        - murano-config
   when:
     - _murano_is_first_play_host
   vars:
@@ -76,8 +85,7 @@
     _oslomsg_notify_vhost: "{{ murano_oslomsg_notify_vhost }}"
     _oslomsg_notify_transport: "{{ murano_oslomsg_notify_transport }}"
   tags:
-    - common-mq
-    - murano-config
+    - always
 
 - import_tasks: murano_install.yml
   tags:
@@ -136,7 +144,12 @@
     - murano-config
     - systemd-service
 
-- import_tasks: service_setup.yml
+- include_role:
+    name: openstack.osa.service_setup
+    apply:
+      tags:
+        - common-service
+        - murano-config
   vars:
     _service_adminuri_insecure: "{{ keystone_service_adminuri_insecure }}"
     _service_in_ldap: "{{ murano_service_in_ldap }}"
@@ -165,7 +178,7 @@
   when:
     - _murano_is_first_play_host
   tags:
-    - murano-config
+    - always
 
 - name: Flush handlers
   meta: flush_handlers
