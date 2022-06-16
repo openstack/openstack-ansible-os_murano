@@ -146,7 +146,12 @@ murano_service_user_domain_id: default
 murano_service_user_name: murano
 murano_service_project_domain_id: default
 murano_service_project_name: service
-murano_role_name: admin
+murano_service_role_names:
+  - admin
+  - service
+murano_service_token_roles:
+  - service
+murano_service_token_roles_required: "{{ openstack_service_token_roles_required | default(True) }}"
 murano_service_region: "{{ service_region | default('RegionOne') }}"
 murano_service_proto: http
 murano_service_publicuri_proto: "{{ openstack_service_publicuri_proto | default(murano_service_proto) }}"

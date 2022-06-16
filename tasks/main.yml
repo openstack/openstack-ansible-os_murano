@@ -160,7 +160,7 @@
     _service_users:
       - name: "{{ murano_service_user_name }}"
         password: "{{ murano_service_password }}"
-        role: "{{ murano_role_name }}"
+        role: "{{ murano_service_role_names }}"
     _service_endpoints:
       - service: "{{ murano_service_name }}"
         interface: "public"
