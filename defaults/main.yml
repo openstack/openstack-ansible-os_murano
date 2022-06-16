@@ -14,7 +14,7 @@
 # limitations under the License.
 
 # Installation method
-murano_install_method: "source"
+murano_install_method: "{{ service_install_method | default('source') }}"
 
 # Operating system user & groups
 murano_system_user_name: murano
@@ -24,7 +24,7 @@ murano_system_user_home: /var/lib/murano
 murano_system_shell: /sbin/nologin
 
 # Distribution deployment
-murano_package_state: latest
+murano_package_state: "{{ package_state | default('latest') }}"
 
 # Set this to True during initial setup, if you want to skip
 # import of the Core Murano Library.
