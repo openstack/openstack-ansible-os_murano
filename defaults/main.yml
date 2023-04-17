@@ -69,6 +69,7 @@ murano_services:
     uwsgi_overrides: "{{ murano_api_uwsgi_ini_overrides }}"
     uwsgi_bind_address: "{{ murano_bind_address }}"
     uwsgi_port: "{{ murano_service_port }}"
+    uwsgi_tls: "{{ murano_backend_ssl | ternary(murano_uwsgi_tls, {}) }}"
   murano-engine:
     group: murano_engine
     service_name: murano-engine
@@ -80,6 +81,9 @@ murano_services:
 murano_wsgi_processes_max: 16
 murano_wsgi_processes: "{{ [[ansible_facts['processor_vcpus']|default(1), 1] | max * 2, murano_wsgi_processes_max] | min }}"
 murano_wsgi_threads: 1
+murano_uwsgi_tls:
+  crt: "{{ murano_ssl_cert }}"
+  key: "{{ murano_ssl_key }}"
 
 # RPC
 murano_oslomsg_rpc_host_group: "{{ oslomsg_rpc_host_group | default('rabbitmq_all') }}"
@@ -164,3 +168,51 @@ murano_ceilometer_enabled: False
 
 # Specific pip packages provided by the user
 murano_user_pip_packages: []
+
+###
+### Backend TLS
+###
+
+# Define if communication between haproxy and service backends should be
+# encrypted with TLS.
+murano_backend_ssl: "{{ openstack_service_backend_ssl | default(False) }}"
+
+# Storage location for SSL certificate authority
+murano_pki_dir: "{{ openstack_pki_dir | default('/etc/openstack_deploy/pki') }}"
+
+# Delegated host for operating the certificate authority
+murano_pki_setup_host: "{{ openstack_pki_setup_host | default('localhost') }}"
+
+# murano server certificate
+murano_pki_keys_path: "{{ murano_pki_dir ~ '/certs/private/' }}"
+murano_pki_certs_path: "{{ murano_pki_dir ~ '/certs/certs/' }}"
+murano_pki_intermediate_cert_name: "{{ openstack_pki_service_intermediate_cert_name | default('ExampleCorpIntermediate') }}"
+murano_pki_regen_cert: ''
+murano_pki_san: "{{ openstack_pki_san | default('DNS:' ~ ansible_facts['hostname'] ~ ',IP:' ~ management_address) }}"
+murano_pki_certificates:
+  - name: "murano_{{ ansible_facts['hostname'] }}"
+    provider: ownca
+    cn: "{{ ansible_facts['hostname'] }}"
+    san: "{{ murano_pki_san }}"
+    signed_by: "{{ murano_pki_intermediate_cert_name }}"
+
+# murano destination files for SSL certificates
+murano_ssl_cert: /etc/murano/murano.pem
+murano_ssl_key: /etc/murano/murano.key
+
+# Installation details for SSL certificates
+murano_pki_install_certificates:
+  - src: "{{ murano_user_ssl_cert | default(murano_pki_certs_path ~ 'murano_' ~ ansible_facts['hostname'] ~ '-chain.crt') }}"
+    dest: "{{ murano_ssl_cert }}"
+    owner: "{{ murano_system_user_name }}"
+    group: "{{ murano_system_user_name }}"
+    mode: "0644"
+  - src: "{{ murano_user_ssl_key | default(murano_pki_keys_path ~ 'murano_' ~ ansible_facts['hostname'] ~ '.key.pem') }}"
+    dest: "{{ murano_ssl_key }}"
+    owner: "{{ murano_system_user_name }}"
+    group: "{{ murano_system_user_name }}"
+    mode: "0600"
+
+# Define user-provided SSL certificates
+#murano_user_ssl_cert: <path to cert on ansible deployment host>
+#murano_user_ssl_key: <path to cert on ansible deployment host>

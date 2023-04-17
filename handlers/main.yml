@@ -28,6 +28,7 @@
     - "Restart murano services"
     - "venv changed"
     - "systemd service changed"
+    - "cert installed"
 
 - name: Start services
   service:
@@ -44,3 +45,4 @@
     - "Restart murano services"
     - "venv changed"
     - "systemd service changed"
+    - "cert installed"

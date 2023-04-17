@@ -90,6 +90,26 @@
   tags:
     - murano-install
 
+- name: Create and install SSL certificates
+  include_role:
+    name: pki
+    tasks_from: main_certs.yml
+    apply:
+      tags:
+        - murano-config
+        - pki
+  vars:
+    pki_setup_host: "{{ murano_pki_setup_host }}"
+    pki_dir: "{{ murano_pki_dir }}"
+    pki_create_certificates: "{{ murano_user_ssl_cert is not defined and murano_user_ssl_key is not defined }}"
+    pki_regen_cert: "{{ murano_pki_regen_cert }}"
+    pki_certificates: "{{ murano_pki_certificates }}"
+    pki_install_certificates: "{{ murano_pki_install_certificates }}"
+  when:
+    - murano_backend_ssl
+  tags:
+    - always
+
 - import_tasks: murano_post_install.yml
   tags:
     - murano-config
