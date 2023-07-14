@@ -38,7 +38,8 @@ murano_public_net_name: "public"
 # Source package builds
 murano_git_repo: https://opendev.org/openstack/murano
 murano_git_install_branch: master
-murano_upper_constraints_url: "{{ requirements_git_url | default('https://releases.openstack.org/constraints/upper/' ~ requirements_git_install_branch | default('master')) }}"
+murano_upper_constraints_url: >-
+  {{ requirements_git_url | default('https://releases.openstack.org/constraints/upper/' ~ requirements_git_install_branch | default('master')) }}
 murano_git_constraints:
   - "--constraint {{ murano_upper_constraints_url }}"
 murano_pip_packages:
@@ -79,7 +80,7 @@ murano_services:
 
 # Murano uWSGI settings
 murano_wsgi_processes_max: 16
-murano_wsgi_processes: "{{ [[ansible_facts['processor_vcpus']|default(1), 1] | max * 2, murano_wsgi_processes_max] | min }}"
+murano_wsgi_processes: "{{ [[ansible_facts['processor_vcpus'] | default(1), 1] | max * 2, murano_wsgi_processes_max] | min }}"
 murano_wsgi_threads: 1
 murano_uwsgi_tls:
   crt: "{{ murano_ssl_cert }}"
@@ -115,7 +116,11 @@ murano_oslomsg_amqp1_enabled: "{{ murano_oslomsg_rpc_transport == 'amqp' }}"
 
 # Database
 murano_db_setup_host: "{{ openstack_db_setup_host | default('localhost') }}"
-murano_db_setup_python_interpreter: "{{ openstack_db_setup_python_interpreter | default((murano_db_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_python['executable'])) }}"
+murano_db_setup_python_interpreter: >-
+  {{
+    openstack_db_setup_python_interpreter | default(
+      (murano_db_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_python['executable']))
+  }}
 murano_galera_address: "{{ galera_address | default('127.0.0.1') }}"
 murano_galera_database: murano
 murano_galera_user: murano
@@ -141,7 +146,11 @@ murano_paste_conf_overrides: {}
 
 # Service setup
 murano_service_setup_host: "{{ openstack_service_setup_host | default('localhost') }}"
-murano_service_setup_host_python_interpreter: "{{ openstack_service_setup_host_python_interpreter | default((murano_service_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_facts['python']['executable'])) }}"
+murano_service_setup_host_python_interpreter: >-
+  {{
+    openstack_service_setup_host_python_interpreter | default(
+      (murano_service_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_facts['python']['executable']))
+  }}
 murano_service_name: murano
 murano_service_type: application-catalog
 murano_service_description: OpenStack Application Catalog service
@@ -214,5 +223,5 @@ murano_pki_install_certificates:
     mode: "0600"
 
 # Define user-provided SSL certificates
-#murano_user_ssl_cert: <path to cert on ansible deployment host>
-#murano_user_ssl_key: <path to cert on ansible deployment host>
+# murano_user_ssl_cert: <path to cert on ansible deployment host>
+# murano_user_ssl_key: <path to cert on ansible deployment host>

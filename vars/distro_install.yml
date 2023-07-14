@@ -15,7 +15,7 @@
 
 
 murano_package_list: |-
-  {% set packages = (murano_distro_packages + murano_service_distro_packages) %}
+  {% set packages = murano_distro_packages + murano_service_distro_packages %}
   {% if murano_oslomsg_amqp1_enabled | bool %}
   {%   set _ = packages.extend(murano_oslomsg_amqp1_distro_packages) %}
   {% endif %}

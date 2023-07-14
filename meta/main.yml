@@ -18,17 +18,17 @@ galaxy_info:
   description: Installation and setup of murano
   company: Vexxhost
   license: Apache2
-  min_ansible_version: 2.4
+  role_name: os_murano
+  namespace: openstack
+  min_ansible_version: "2.10"
   platforms:
     - name: Ubuntu
       versions:
-        - bionic
+        - focal
+        - jammy
     - name: EL
       versions:
-        - 7
-    - name: opensuse
-      versions:
-        - all
+        - "9"
   galaxy_tags:
     - cloud
     - python
@@ -39,4 +39,3 @@ dependencies:
   - role: apt_package_pinning
     when:
       - ansible_facts['pkg_mgr'] == 'apt'
-

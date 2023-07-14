@@ -35,12 +35,16 @@
         format: zip
         path: "{{ murano_repo.path }}/murano/meta/{{ item }}/*"
         dest: "{{ murano_repo.path }}/{{ item }}.zip"
+        mode: "0644"
       with_items:
         - io.murano
         - io.murano.applications
 
     - name: Import packed libraries
-      shell: "openstack {{ keystone_service_publicuri_insecure | ternary('--insecure', '') }} package import --exists-action u --is-public {{ murano_repo.path }}/{{ item }}.zip"
+      command: >-
+        openstack {{
+          keystone_service_publicuri_insecure | ternary('--insecure', '')
+        }} package import --exists-action u --is-public {{ murano_repo.path }}/{{ item }}.zip
       environment:
         OS_USERNAME: "{{ murano_service_user_name }}"
         OS_PASSWORD: "{{ murano_service_password }}"
@@ -51,6 +55,7 @@
         OS_REGION_NAME: "{{ murano_service_region }}"
       register: import_libraries
       until: import_libraries is success
+      changed_when: false
       retries: 10
       delay: 5
       with_items:
@@ -68,3 +73,4 @@
     section: "murano"
     option: "murano_library_installed"
     value: "True"
+    mode: "0644"
