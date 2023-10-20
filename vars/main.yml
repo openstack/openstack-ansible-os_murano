@@ -24,6 +24,19 @@ _murano_is_first_play_host: >-
       inventory_hostname == (groups[murano_services['murano-api']['group']] | intersect(ansible_play_hosts)) | first) | bool
   }}
 
+_murano_oslomsg_rpc_vhost_conf: >-
+  {{
+    (murano_oslomsg_rpc_vhost is string) | ternary(
+      murano_oslomsg_rpc_vhost, murano_oslomsg_rpc_vhost | selectattr('state', 'eq', 'present') | map(attribute='name') | first)
+  }}
+
+_murano_oslomsg_notify_vhost_conf: >-
+  {{
+    (murano_oslomsg_notify_vhost is string) | ternary(
+      murano_oslomsg_notify_vhost, murano_oslomsg_notify_vhost | selectattr('state', 'eq', 'present') | map(attribute='name') | first)
+  }}
+
+
 filtered_murano_services: |-
   {% set services = [] %}
   {% for key, value in murano_services.items() %}
