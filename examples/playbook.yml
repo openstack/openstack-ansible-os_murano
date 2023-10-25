@@ -1,0 +1,8 @@
+---
+- name: Install murano
+  hosts: murano_all
+  user: root
+  roles:
+    - role: "os_murano"
+      tags:
+        - "os-murano"

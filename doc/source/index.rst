@@ -14,6 +14,8 @@ Default variables
    :language: yaml
    :start-after: under the License.
 
-Dependencies
-~~~~~~~~~~~~
+Example playbook
+~~~~~~~~~~~~~~~~
 
+.. literalinclude:: ../../examples/playbook.yml
+   :language: yaml
